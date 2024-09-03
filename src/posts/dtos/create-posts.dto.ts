@@ -11,10 +11,11 @@ import {
   IsArray,
   ValidateNested,
   MaxLength,
+  IsInt,
 } from 'class-validator';
 import { postType } from '../enums/postType.enum';
 import { postStatus } from '../enums/postStatus.enum';
-import { CreateMetaOptionDto } from './create-meta-option.dto';
+import { CreateMetaOptionDto } from '../../meta-options/dtos/create-meta-option.dto';
 import { Type } from 'class-transformer';
 
 export class CreatePostsDto {
@@ -59,13 +60,15 @@ export class CreatePostsDto {
 
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
-  @MinLength(3, { each: true })
-  tags: string[];
+  @IsInt({ each: true })
+  tags: number[];
 
   @IsOptional()
-  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateMetaOptionDto)
-  metaOptions?: CreateMetaOptionDto[];
+  metaOptions?: CreateMetaOptionDto | null;
+
+  @IsInt()
+  @IsNotEmpty()
+  authorId: number;
 }

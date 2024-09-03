@@ -29,4 +29,8 @@ export class UserService {
 
     return newUser;
   }
+
+  public async findOneById(id: number) {
+    return await this.userRepository.findOneBy({ id });
+  }
 }

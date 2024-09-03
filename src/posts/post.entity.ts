@@ -1,7 +1,18 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { postType } from './enums/postType.enum';
 import { postStatus } from './enums/postStatus.enum';
-import { CreateMetaOptionDto } from './dtos/create-meta-option.dto';
+
+import { MetaOption } from 'src/meta-options/meta-option.entity';
+import { User } from 'src/users/user.entity';
+import { Tag } from 'src/tags/tag.entity';
 
 @Entity()
 export class Post {
@@ -64,7 +75,26 @@ export class Post {
   })
   publishOn?: Date;
 
-  // Work on these in lecture on relationships
-  tags?: string[];
-  metaOptions?: CreateMetaOptionDto[];
+  /**
+   * This line sets bi directional relationship between Post and MetaOption
+   */
+
+  @OneToOne(() => MetaOption, (metaOption) => metaOption.post, {
+    cascade: true,
+    /**
+     * "eager" just means that the metaOptions will be loaded when the post is loaded
+     * we can use either relationship or eager
+     */
+    eager: true,
+  })
+  metaOptions?: MetaOption;
+
+  @ManyToOne(() => User, (user) => user.post, {
+    eager: true,
+  })
+  author: User;
+
+  @ManyToMany(() => Tag, { eager: true })
+  @JoinTable()
+  tags?: Tag[];
 }
