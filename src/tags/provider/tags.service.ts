@@ -20,4 +20,9 @@ export class TagsService {
     const result = await this.tagRepository.find({ where: { id: In(tags) } });
     return result;
   }
+
+  public async delete(id: number) {
+    await this.tagRepository.delete(id);
+    return { deleted: true, id: id };
+  }
 }
